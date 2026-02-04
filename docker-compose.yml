@@ -1,0 +1,51 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: nexlytix-broker
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+    restart: unless-stopped
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: nexlytix-influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=nexlytix123
+      - DOCKER_INFLUXDB_INIT_ORG=nexlytix
+      - DOCKER_INFLUXDB_INIT_BUCKET=telemetry
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=nexlytix-admin-token
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    restart: unless-stopped
+
+  ingest-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexlytix-ingest
+    ports:
+      - "8000:8000"
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=nexlytix-admin-token
+      - INFLUXDB_ORG=nexlytix
+      - INFLUXDB_BUCKET=telemetry
+      - API_KEY=nx-prod-key-2026
+      - HMAC_SECRET=nx-hmac-secret-2026
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+      - RATE_LIMIT=100/minute
+    depends_on:
+      - mosquitto
+      - influxdb
+    restart: unless-stopped
+
+volumes:
+  influxdb-data:
