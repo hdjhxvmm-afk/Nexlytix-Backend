@@ -1,0 +1,343 @@
+{
+    "info": {
+        "_postman_id": "nexlytix-api-collection-v1",
+        "name": "Nexlytix Telemetry API",
+        "description": "Complete test collection for the Nexlytix IoT telemetry backend.\n\nVariables:\n- base_url: http://localhost:8000\n- api_key: nx-prod-key-2026\n\nRun seeder first: python tests/seeder.py",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000",
+            "type": "string"
+        },
+        {
+            "key": "api_key",
+            "value": "nx-prod-key-2026",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "1 — Health Check",
+            "item": [
+                {
+                    "name": "GET / → 200 ok",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test('Body has status ok', () => {",
+                                    "    const body = pm.response.json();",
+                                    "    pm.expect(body.status).to.eql('ok');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2 — Telemetry (Valid)",
+            "item": [
+                {
+                    "name": "GET /api/telemetry/VemCore-01 → 200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test('Has device_id field', () => {",
+                                    "    const body = pm.response.json();",
+                                    "    pm.expect(body).to.have.property('device_id');",
+                                    "    pm.expect(body.device_id).to.eql('VemCore-01');",
+                                    "});",
+                                    "pm.test('Has data array', () => {",
+                                    "    const body = pm.response.json();",
+                                    "    pm.expect(body).to.have.property('data');",
+                                    "    pm.expect(body.data).to.be.an('array');",
+                                    "});",
+                                    "pm.test('Has count field', () => {",
+                                    "    const body = pm.response.json();",
+                                    "    pm.expect(body).to.have.property('count');",
+                                    "    pm.expect(body.count).to.be.a('number');",
+                                    "});",
+                                    "pm.test('Data records have correct shape', () => {",
+                                    "    const body = pm.response.json();",
+                                    "    if (body.data.length > 0) {",
+                                    "        const rec = body.data[0];",
+                                    "        pm.expect(rec).to.have.property('time');",
+                                    "        pm.expect(rec).to.have.property('temp_c');",
+                                    "        pm.expect(rec).to.have.property('humidity_pct');",
+                                    "        pm.expect(rec).to.have.property('vibration_rms');",
+                                    "        pm.expect(rec).to.have.property('seq');",
+                                    "        pm.expect(rec).to.have.property('status');",
+                                    "    }",
+                                    "});",
+                                    "pm.test('Response time < 2s', () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-API-Key",
+                                "value": "{{api_key}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/telemetry/VemCore-01",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "telemetry",
+                                "VemCore-01"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET /api/telemetry/SiteB-Gateway → 200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test('device_id matches', () => pm.expect(pm.response.json().device_id).to.eql('SiteB-Gateway'));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-API-Key",
+                                "value": "{{api_key}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/telemetry/SiteB-Gateway",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "telemetry",
+                                "SiteB-Gateway"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET /api/telemetry/FactoryFloor-03 → 200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test('device_id matches', () => pm.expect(pm.response.json().device_id).to.eql('FactoryFloor-03'));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-API-Key",
+                                "value": "{{api_key}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/telemetry/FactoryFloor-03",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "telemetry",
+                                "FactoryFloor-03"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3 — Authentication Tests",
+            "item": [
+                {
+                    "name": "GET /api/telemetry/VemCore-01 (No Key) → 401",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status is 401', () => pm.response.to.have.status(401));",
+                                    "pm.test('Error detail present', () => {",
+                                    "    const body = pm.response.json();",
+                                    "    pm.expect(body).to.have.property('detail');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/telemetry/VemCore-01",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "telemetry",
+                                "VemCore-01"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET /api/telemetry/VemCore-01 (Wrong Key) → 401",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status is 401', () => pm.response.to.have.status(401));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-API-Key",
+                                "value": "totally-wrong-key-12345"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/telemetry/VemCore-01",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "telemetry",
+                                "VemCore-01"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "4 — Validation Tests",
+            "item": [
+                {
+                    "name": "GET /api/telemetry/!!!BAD!!! → 400",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status is 400', () => pm.response.to.have.status(400));",
+                                    "pm.test('Error detail present', () => {",
+                                    "    pm.expect(pm.response.json()).to.have.property('detail');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-API-Key",
+                                "value": "{{api_key}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/telemetry/%21%21%21BAD%21%21%21",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "telemetry",
+                                "%21%21%21BAD%21%21%21"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET /api/telemetry/[spaces in id] → 400",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-API-Key",
+                                "value": "{{api_key}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/telemetry/device%20with%20spaces",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "telemetry",
+                                "device%20with%20spaces"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
