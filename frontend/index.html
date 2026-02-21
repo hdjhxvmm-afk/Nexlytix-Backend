@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexlytix — Live Telemetry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">Nexlytix</span>
+      <span class="logo-sub">Telemetry</span>
+    </div>
+    <div class="header-right">
+      <span class="live-dot"></span>
+      <span id="last-update">–</span>
+      <button id="refresh-btn" title="Force refresh">↻</button>
+    </div>
+  </header>
+
+  <!-- Device picker -->
+  <nav class="device-nav">
+    <button class="device-btn active" data-id="VemCore-01">VemCore-01</button>
+    <button class="device-btn" data-id="VemCore-02">VemCore-02</button>
+    <button class="device-btn" data-id="SiteB-Gateway">SiteB-Gateway</button>
+    <button class="device-btn" data-id="FactoryFloor-03">FactoryFloor-03</button>
+    <button class="device-btn" data-id="Warehouse-Alpha">Warehouse-Alpha</button>
+  </nav>
+
+  <!-- Main -->
+  <main>
+
+    <!-- KPI cards -->
+    <section class="kpis">
+      <div class="card kpi" id="kpi-temp">
+        <div class="kpi-label">Temperature</div>
+        <div class="kpi-value" id="val-temp">–</div>
+        <div class="kpi-unit">°C</div>
+        <div class="kpi-bar"><div class="kpi-fill" id="bar-temp"></div></div>
+      </div>
+      <div class="card kpi" id="kpi-hum">
+        <div class="kpi-label">Humidity</div>
+        <div class="kpi-value" id="val-hum">–</div>
+        <div class="kpi-unit">%</div>
+        <div class="kpi-bar"><div class="kpi-fill" id="bar-hum"></div></div>
+      </div>
+      <div class="card kpi" id="kpi-vib">
+        <div class="kpi-label">Vibration RMS</div>
+        <div class="kpi-value" id="val-vib">–</div>
+        <div class="kpi-unit">m/s²</div>
+        <div class="kpi-bar"><div class="kpi-fill" id="bar-vib"></div></div>
+      </div>
+      <div class="card kpi status-card" id="kpi-status">
+        <div class="kpi-label">Status</div>
+        <div class="status-badge" id="val-status">–</div>
+        <div class="kpi-label" style="margin-top:8px">Sequence</div>
+        <div class="seq-val" id="val-seq">–</div>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section class="charts-grid">
+      <div class="card chart-card">
+        <div class="chart-title">Temperature (°C)</div>
+        <canvas id="chart-temp"></canvas>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-title">Humidity (%)</div>
+        <canvas id="chart-hum"></canvas>
+      </div>
+      <div class="card chart-card wide">
+        <div class="chart-title">Vibration RMS (m/s²)</div>
+        <canvas id="chart-vib"></canvas>
+      </div>
+    </section>
+
+    <!-- Readings table -->
+    <section class="card table-card">
+      <div class="table-header">
+        <span class="chart-title">Recent Readings</span>
+        <span id="record-count" class="count-badge">0 records</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Temp °C</th>
+              <th>Humidity %</th>
+              <th>Vibration</th>
+              <th>Seq</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="readings-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Error toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
