@@ -8,7 +8,7 @@
 #define PASS      "YOUR_PASS"
 #define BROKER    "192.168.1.100"
 #define DEVICE_ID "VemCore-01"
-
+// look up 
 #define DHT_PIN   4
 #define VIB_PIN   34     // analog vibration sensor
 #define INTERVAL  5000
